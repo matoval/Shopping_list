@@ -57,6 +57,7 @@
 
   function deleteItem() {
     const item = event.target.previousSibling.data;
+    console.log(item);
     const id = parseInt(event.target.value);
     const deleteData = {
       item: item,
@@ -160,7 +161,7 @@
         
           <ul>
             {#each listOfItems.items as items}
-              <li>{items}<button class="delete-btn" value="{listOfItems.id}" on:click={deleteItem}>X</button><hr></li>
+              <li><input type="checkbox">{items}<button class="delete-btn" value="{listOfItems.id}" on:click={deleteItem}>X</button><hr></li>
             {/each}
           </ul>
         </div>

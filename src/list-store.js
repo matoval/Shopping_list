@@ -39,8 +39,9 @@ const listsStore = {
     lists.update(i => {
       const updatedStore = {...i.find(store => store.id === deleteData.id)};
       const updatedItem = updatedStore.items.filter(item => item !== deleteData.item);
-      if (updatedStore.items >= 1) {
-        updatedStore.items = [updatedItem];
+      console.log(updatedStore.items);
+      if (updatedStore.items.length >= 2) {
+        updatedStore.items = [...updatedItem];
       } else {
         updatedStore.items = [];
       }
