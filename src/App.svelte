@@ -14,18 +14,23 @@
   let newStoreName = "";
 
   window.addEventListener('load', () => {
-    storedList = JSON.parse(localStorage.getItem('storedList'));
-    console.log(storedList);
-    lists.setLists(storedList);
-    loadList();
+    if (storedList.length !== null) {
+      storedList = JSON.parse(localStorage.getItem('storedList'));
+      lists.setLists(storedList);
+      loadList();
+    }
   })
+
+  function storeData() {
+     localStorage.setItem('storedList', JSON.stringify(storedList));
+  }
 
   function loadList () {
     lists.subscribe(items => {
       storedList = items;
-      localStorage.setItem('storedList', JSON.stringify(storedList));
-      console.log(storedList);
-      console.log(localStorage);
+      if(storedList >= 1) {
+        storeData();
+      }
     });
   }
   
@@ -45,6 +50,7 @@
       storeName: newStoreName
     }
     lists.addStoreName(storeNameData);
+    storeData();
   }
 
   function addItem() {
@@ -53,22 +59,29 @@
       itemValue: itemValue
     } 
     lists.addItem(itemData);
-    itemValue = "";
+    storeData();
   }
 
   function removeAll() {
     lists.setLists("");
+    storeData();
   }
 
   function deleteItem() {
     const item = event.target.previousSibling.data;
-    console.log(item);
     const id = parseInt(event.target.value);
     const deleteData = {
       item: item,
       id: id
     }
     lists.removeItem( deleteData);
+    storeData();
+  }
+
+  function deleteList() {
+    const id = event.target.value;
+    lists.removeList(id);
+    storeData();
   }
 
 </script>
@@ -155,11 +168,13 @@
   </div>
   {#if storedList.length >= 1}
     {#each storedList as listOfItems}
-      <div class="list">
+      <div class="list" id={listOfItems.id}>
         <div class="store">
         {#if listOfItems.storeName === ""}
+          <button value="{listOfItems.id}" on:click={deleteList}>Delete List</button>
           <label for="store-name">Store Name:<input type="text" name="store-name" on:input={event => (newStoreName = event.target.value)} ><button value="{listOfItems.id}" on:click={addStoreName}>Add</button></label>
         {:else}
+           <button value="{listOfItems.id}" on:click={deleteList}>Delete List</button>
           <h3>{listOfItems.storeName}</h3>
         {/if}
           <label for="add-item">Add Item:<input type="text" name="add-item" on:input={event => (itemValue = event.target.value)} ><button value="{listOfItems.id}" on:click={addItem}>Add</button></label>
