@@ -13,14 +13,19 @@
   let itemValue = "";
   let newStoreName = "";
 
-  if (isLoading) {
+  window.addEventListener('load', () => {
+    storedList = JSON.parse(localStorage.getItem('storedList'));
+    console.log(storedList);
+    lists.setLists(storedList);
     loadList();
-  } 
+  })
 
   function loadList () {
     lists.subscribe(items => {
       storedList = items;
+      localStorage.setItem('storedList', JSON.stringify(storedList));
       console.log(storedList);
+      console.log(localStorage);
     });
   }
   
